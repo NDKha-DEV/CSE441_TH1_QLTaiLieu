@@ -7,8 +7,15 @@ import 'document_form_page.dart';
 
 class DocumentListPage extends StatefulWidget {
   final DocumentService documentService;
+  final String? accountLabel;
+  final Future<void> Function()? onSignOut;
 
-  const DocumentListPage({super.key, required this.documentService});
+  const DocumentListPage({
+    super.key,
+    required this.documentService,
+    this.accountLabel,
+    this.onSignOut,
+  });
 
   @override
   State<DocumentListPage> createState() => _DocumentListPageState();
@@ -80,6 +87,14 @@ class _DocumentListPageState extends State<DocumentListPage> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+  Future<void> _signOut() async {
+    try {
+      await widget.onSignOut?.call();
+    } catch (error) {
+      _showMessage('Không thể đăng xuất: $error');
+    }
+  }
+
   IconData _getFileIcon(String type) {
     switch (type.toUpperCase()) {
       case 'PDF':
@@ -108,6 +123,13 @@ class _DocumentListPageState extends State<DocumentListPage> {
       appBar: AppBar(
         title: const Text('Tài liệu học tập'),
         actions: [
+          if (widget.onSignOut != null)
+            IconButton(
+              tooltip:
+                  'Đăng xuất${widget.accountLabel == null ? '' : ': ${widget.accountLabel}'}',
+              onPressed: _signOut,
+              icon: const Icon(Icons.logout),
+            ),
           IconButton(
             tooltip: 'Thêm tài liệu',
             onPressed: _openAddDocumentPage,

@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:th1_cashew_document/application/document_service.dart';
 import 'package:th1_cashew_document/application/file_storage_service.dart';
 import 'package:th1_cashew_document/data/database/app_database.dart';
+import 'package:th1_cashew_document/models/document_file.dart';
 
 void main() {
   late AppDatabase database;
@@ -41,7 +42,11 @@ void main() {
       description: 'Tài liệu kiểm thử',
       subject: 'Công nghệ phần mềm',
       type: 'TXT',
-      sourceFile: sourceFile,
+      sourceFile: DocumentFile(
+        name: sourceFile.uri.pathSegments.last,
+        path: sourceFile.path,
+        readBytes: sourceFile.readAsBytes,
+      ),
     );
 
     expect(document.id, isNotNull);

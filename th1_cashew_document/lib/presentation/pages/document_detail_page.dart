@@ -173,7 +173,10 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 ? document.description!
                 : 'Không có mô tả.',
           ),
-          _buildInfo('Đường dẫn file', document.filePath),
+          _buildInfo(
+            'Đường dẫn file',
+            widget.documentService.displayFilePath(document.filePath),
+          ),
           _buildInfo('Ngày tạo', _formatDate(document.createdAt)),
           _buildInfo('Cập nhật lần cuối', _formatDate(document.updatedAt)),
         ],

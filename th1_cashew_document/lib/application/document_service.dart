@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
 
 import '../data/dao/document_dao.dart';
 import '../data/database/app_database.dart';
+import '../models/document_file.dart';
 import '../models/document_model.dart';
 import 'file_storage_service.dart';
 
@@ -34,7 +33,7 @@ class DocumentService {
     String? description,
     required String subject,
     required String type,
-    required File sourceFile,
+    required DocumentFile sourceFile,
   }) async {
     final filePath = await _fileStorageService.saveFile(sourceFile);
 
@@ -119,6 +118,10 @@ class DocumentService {
     final documents = await _documentDao.searchDocuments(keyword);
 
     return documents.map(_toModel).toList();
+  }
+
+  String displayFilePath(String filePath) {
+    return _fileStorageService.displayFilePath(filePath);
   }
 
   DocumentModel _toModel(Document document) {

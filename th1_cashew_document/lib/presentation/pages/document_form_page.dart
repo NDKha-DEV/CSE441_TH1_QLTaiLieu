@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../application/document_service.dart';
+import '../../models/document_file.dart';
 import '../../models/document_model.dart';
 
 class DocumentFormPage extends StatefulWidget {
@@ -27,7 +26,7 @@ class _DocumentFormPageState extends State<DocumentFormPage> {
   final _descriptionController = TextEditingController();
   final _subjectController = TextEditingController();
 
-  File? _selectedFile;
+  DocumentFile? _selectedFile;
   String? _selectedFileName;
   String _selectedType = 'PDF';
 
@@ -73,7 +72,7 @@ class _DocumentFormPageState extends State<DocumentFormPage> {
         ],
       );
 
-      if (result == null || result.isEmpty) {
+      if (result.isEmpty) {
         return;
       }
 
@@ -82,7 +81,7 @@ class _DocumentFormPageState extends State<DocumentFormPage> {
       final extension = pickedFile.extension?.toUpperCase() ?? 'OTHER';
 
       setState(() {
-        _selectedFile = File(pickedFile.path!);
+        _selectedFile = DocumentFile.fromPlatformFile(pickedFile);
         _selectedFileName = pickedFile.name;
         _selectedType = extension;
       });
@@ -264,7 +263,9 @@ class _DocumentFormPageState extends State<DocumentFormPage> {
               if (_isEditing && _selectedFileName == null) ...[
                 const SizedBox(height: 10),
                 _buildFileInfo(
-                  fileName: widget.document!.filePath,
+                  fileName: widget.documentService.displayFilePath(
+                    widget.document!.filePath,
+                  ),
                   isCurrentFile: true,
                 ),
               ],
